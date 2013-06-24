@@ -21,7 +21,7 @@ grad = zeros(size(theta));
 theta_m = theta(2:size(theta)(1), :);
 X_m = X(:, 2:size(X)(2));
 
-J = ( -y' * log(sigmoid(X * theta)) - (1 - y') * log (1 - sigmoid(X * theta))) / m + lambda * sum(theta .^ 2 ) / (2 * m);
+J = ( -y' * log(sigmoid(X * theta)) - (1 - y') * log (1 - sigmoid(X * theta))) / m + lambda * sum(theta_m .^ 2 ) / (2 * m);
 
 grad_zero = X(:, 1)' * (sigmoid(X * theta) - y) / m;
 grad_general = (X_m' * (sigmoid(X * theta) - y) + lambda * theta_m) / m;
