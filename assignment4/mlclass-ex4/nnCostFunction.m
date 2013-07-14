@@ -62,15 +62,26 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+% Restructure y so we use a row vector to represent each y value
+%y=eye(10)(y, :)
+y = eye(length(unique(y)))(y,:);
 
+X = [ones(m,1) X];
 
+% Value vector at hidden layer
+X_m = sigmoid(X * Theta1');
+X_m = [ones(m,1) X_m];
 
+% Cost value without regularisation
+J = sum(sum((-y .* log(sigmoid(X_m * Theta2')) - (1 - y) .* log(1 - sigmoid(X_m * Theta2'))))) / m;
 
+% Get rid of the values correspond to bias in Theta1 and Theta2
 
+Theta1(:,[1]) = [];
+Theta2(:,[1]) = [];
 
-
-
-
+% Cost with regularisation
+J = J + lambda * (sum(sum(Theta1.^2)) + sum(sum(Theta2.^2))) / (2 * m);
 
 
 
