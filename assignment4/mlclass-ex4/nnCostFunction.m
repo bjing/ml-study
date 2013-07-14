@@ -63,32 +63,43 @@ Theta2_grad = zeros(size(Theta2));
 %
 
 % Restructure y so we use a row vector to represent each y value
-%y=eye(10)(y, :)
 y = eye(length(unique(y)))(y,:);
 
-X = [ones(m,1) X];
-
-% Value vector at hidden layer
-X_m = sigmoid(X * Theta1');
-X_m = [ones(m,1) X_m];
+% Values at each layer
+a1 = [ones(m,1) X]; % 5000x401
+z2 = a1 * Theta1'; % 5000x25
+a2 = sigmoid(z2);
+a2 = [ones(m,1) a2]; % 5000x26
+z3 = a2 * Theta2';
+hx = sigmoid(z3);
 
 % Cost value without regularisation
-J = sum(sum((-y .* log(sigmoid(X_m * Theta2')) - (1 - y) .* log(1 - sigmoid(X_m * Theta2'))))) / m;
+J = sum(sum((-y .* log(sigmoid(a2 * Theta2')) - (1 - y) .* log(1 - sigmoid(a2 * Theta2'))))) / m;
 
 % Get rid of the values correspond to bias in Theta1 and Theta2
-
-Theta1(:,[1]) = [];
-Theta2(:,[1]) = [];
+Theta2_org = Theta2; % 10*26
+Theta1(:,[1]) = []; % 25x400
+Theta2(:,[1]) = []; % 10x25
 
 % Cost with regularisation
 J = J + lambda * (sum(sum(Theta1.^2)) + sum(sum(Theta2.^2))) / (2 * m);
 
+% Calculate delta/Delta values
+delta3 = hx - y; % 5000x10
+delta2 = delta3 * Theta2_org .* sigmoidGradient([ones(m,1) z2]); % 5000x26
+Delta2 = delta3' * a2; % (5000x10) * (5000x26) = 10x26
+Delta1 = delta2(:,2:end)' * a1; % (25x5000) * (5000x401) = 25*401
 
+% Unregularised gradient values
+Theta1_grad = Delta1 / m;
+Theta2_grad = Delta2 / m;
 
-
-
-
-
+% Regularised gradient values
+% First columns of Theta not to be regularised
+Theta1_tmp = [zeros(length(Theta1(:,1)),1) Theta1];
+Theta2_tmp = [zeros(length(Theta2(:,1)),1) Theta2];
+Theta1_grad = Theta1_grad + lambda * Theta1_tmp / m;
+Theta2_grad = Theta2_grad + lambda * Theta2_tmp / m;
 
 
 % -------------------------------------------------------------
