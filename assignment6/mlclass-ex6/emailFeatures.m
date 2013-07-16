@@ -48,6 +48,12 @@ x = zeros(n, 1);
 %
 %
 
+for i = 1:n
+    exist = find(word_indices == i);
+    if (length(exist) != 0)
+        x(i) = 1;
+    endif
+endfor
 
 
 
