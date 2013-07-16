@@ -26,8 +26,17 @@ centroids = zeros(K, n);
 % Note: You can use a for-loop over the centroids to compute this.
 %
 
-
-
+for i = 1:K
+    % Find all data indices in X that belong to centroid i
+    cents_idx = find(idx == i);
+    val = zeros(1, n);
+    % Loop through all the data that belong to centroid i and add them up
+    for j = 1:length(cents_idx)
+        val = val + X(cents_idx(j),:);
+    endfor
+    % Average value - new centroid
+    centroids(i,:) = val / length(cents_idx);
+endfor
 
 
 

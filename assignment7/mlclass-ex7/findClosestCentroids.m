@@ -21,8 +21,22 @@ idx = zeros(size(X,1), 1);
 % Note: You can use a for-loop over the examples to compute this.
 %
 
-
-
+% Loop through all training points
+for i = 1:size(X,1)
+    min_dist = 10000000;
+    % Loop through all centroids
+    for j = 1:K
+        % Calculate distance between data point and centroid
+        dist = sqrt(sum((X(i,:) - centroids(j,:)).^2));
+        if (dist < min_dist)
+            % Get min distance
+            min_dist = dist;
+            % Get cent index
+            cent = j;
+        endif
+    endfor
+    idx(i) = cent;
+endfor
 
 
 
